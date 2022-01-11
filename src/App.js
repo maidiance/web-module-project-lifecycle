@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import User from './components/User';
+import FollowerList from './components/FollowerList';
 
 class App extends React.Component {
   state = {
     user: {},
     followers: [],
-    input: 'Github Handle',
+    search: 'Github Handle',
   }
   componentDidMount() {
     axios.get('https://api.github.com/users/maidiance')
@@ -20,7 +22,6 @@ class App extends React.Component {
       })
     axios.get('https://api.github.com/users/maidiance/followers')
       .then(resp => {
-        console.log(resp.data);
         this.setState({
           ...this.state,
           followers: resp.data,
@@ -38,26 +39,8 @@ class App extends React.Component {
         <input/>
         <button>Search</button>
       </form>
-      <div>
-        <img src={this.state.user.avatar_url} />
-        <h2>{this.state.user.name}</h2>
-        <p>{this.state.user.login}</p>
-        <p>Total repos: {this.state.user.public_repos}</p>
-        <p>Total followers: {this.state.user.followers}</p>
-      </div>
-      <div>
-        <h2>Followers:</h2>
-        {
-          this.state.followers.map(user => {
-            return(
-              <div key={user.node_id}>
-                <img src = {user.avatar_url} />
-                <p>{user.login}</p>
-              </div>
-            )
-          })
-        }
-      </div>
+      <User user={this.state.user} />
+      <FollowerList followers={this.state.followers} />
     </div>
     );
   }
